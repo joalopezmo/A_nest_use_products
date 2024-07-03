@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as UuidV4 } from 'uuid';
 import { CreateProductsItemDto } from './dto/create-products-item.dto';
 import { ProductsItem } from './entities/products-item.entity';
@@ -16,18 +16,30 @@ export class ProductsItemsService {
   }
 
   findAll() {
-    return `This action returns all productsItems`;
+    return this.products;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} productsItem`;
+  findOne(id: string): ProductsItem {
+    const product = this.products.find((product) => product.id === id);
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+    return product;
   }
 
   // update(id: number, updateProductsItemDto: UpdateProductsItemDto) {
   //   return `This action updates a #${id} productsItem`;
   // }
 
-  remove(id: number) {
-    return `This action removes a #${id} productsItem`;
+  remove(id: string) {
+    // return `This action removes a #${id} productsItem`;
+    const productIndex = this.products.findIndex(
+      (product) => product.id === id,
+    );
+    if (productIndex === -1) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+    this.products.splice(productIndex, 1);
+    return id;
   }
 }
