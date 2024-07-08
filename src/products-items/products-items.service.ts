@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as UuidV4 } from 'uuid';
 import { CreateProductsItemDto } from './dto/create-products-item.dto';
 import { ProductsItem } from './entities/products-item.entity';
+import { UpdateProductsItemDto } from './dto/update-products-item.dto';
 // import { UpdateProductsItemDto } from './dto/update-products-item.dto';
 
 @Injectable()
@@ -27,9 +28,14 @@ export class ProductsItemsService {
     return product;
   }
 
-  // update(id: number, updateProductsItemDto: UpdateProductsItemDto) {
-  //   return `This action updates a #${id} productsItem`;
-  // }
+  update(id: string, updateProductsItemDto: UpdateProductsItemDto) {
+    const { id: __, name, description, price } = updateProductsItemDto;
+    const product = this.findOne(id);
+
+    product.updateWith({ name, description, price });
+
+    return product;
+  }
 
   remove(id: string) {
     // return `This action removes a #${id} productsItem`;
